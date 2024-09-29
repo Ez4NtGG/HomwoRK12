@@ -44,9 +44,6 @@ async def signup(body: UserModel, db: Session = Depends(get_db)):
         )
     return new_user
 
-
-# Annotated[OAuth2PasswordRequestForm, Depends()]
-# auth_response_model = Depends()
 @router.post("/login", response_model=repository_auth.auth_service.token_response_model)
 async def login(
     response: Response,
@@ -92,7 +89,7 @@ async def login(
             print(f"{token.get('expire_refresh_token')=}")
             response.set_cookie(
                 key="refresh_token",
-                value=refresh_token, # type: ignore
+                value=refresh_token, 
                 httponly=True,
                 path="/api/",
                 expires=token.get("expire_refresh_token"),
@@ -180,7 +177,6 @@ async def get_current_user_dbtoken(
                 refresh_token
             )
             user = await repository_users.get_user_by_email(str(email), db)
-            # print(f"refresh_access_token {email=} {user.email} {user.refresh_token}")  # type: ignore
             if refresh_token == user.refresh_token:  # type: ignore
                 result = await refresh_access_token(refresh_token)
                 print(f"refresh_access_token  {result=}")
@@ -254,7 +250,7 @@ async def refresh_token(
     email = await repository_auth.auth_service.decode_refresh_token(token)
     print(f"refresh_token {email=}")
     user: User | None = await repository_users.get_user_by_email(email, db)
-    if user and user.refresh_token != token:  # type: ignore
+    if user and user.refresh_token != token: 
         await repository_users.update_user_refresh_token(user, None, db)
         response.delete_cookie(key="refresh_token", httponly=True, path="/api/")
         raise HTTPException(

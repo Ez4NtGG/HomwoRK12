@@ -12,7 +12,6 @@ class PassCrypt:
 
     def __init__(self, scheme: str = "bcrypt") -> None:
         self.pwd_context = CryptContext(schemes=[scheme], deprecated="auto")
-        # print("init PassCrypt ", scheme, self.pwd_context)
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
@@ -25,7 +24,6 @@ class AuthToken(PassCrypt):
     SECRET_KEY: str
     ALGORITHM: str
 
-    # constructor
     def __init__(
         self, init_key: str | None = None, init_algorithm: str = "HS512"
     ) -> None:
@@ -37,13 +35,11 @@ class AuthToken(PassCrypt):
         assert self.ALGORITHM, "MISSED ALGORITHM"
         super().__init__()
 
-    # JWT operation
     def encode_jwt(self, to_encode) -> str:
         return jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
 
     def decode_jwt(self, token) -> str | None:
         try:
-            # Decode JWT
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
             if payload["scope"] == "access_token":
                 email = payload["sub"]
@@ -52,7 +48,6 @@ class AuthToken(PassCrypt):
             return None
         return None
 
-    # define a function to generate a new access token
     async def create_access_token(
         self, data: dict, expires_delta: Optional[float] = None
     ) -> tuple[str,datetime]:

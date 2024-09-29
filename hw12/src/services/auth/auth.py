@@ -20,8 +20,6 @@ class Auth(AuthToken):
     auth_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
     auth_response_model = OAuth2PasswordRequestForm
     token_response_model = AccessTokenRefreshResponse
-    
-    # define a function to generate a new refresh token
     async def create_refresh_token(
         self, data: dict, expires_delta: Optional[float] = None
     ) -> tuple[str, datetime]:
@@ -56,7 +54,3 @@ class Auth(AuthToken):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
             )
-        
-# auth_service = Auth()
-
-

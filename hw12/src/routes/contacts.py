@@ -33,7 +33,7 @@ async def search_contacts(
             "skip": skip,
             "limit": limit,
         }
-        user_id: int = current_user.id # type: ignore
+        user_id: int = current_user.id
         contacts = await repository_contacts.search_contacts(param, user_id, db)
     if contacts is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")

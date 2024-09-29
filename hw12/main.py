@@ -45,7 +45,6 @@ async def main(request: Request):
 @app.get("/api/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
     try:
-        # Make request
         result = db.execute(text("SELECT 1")).fetchone()
         if result is None:
             raise HTTPException(

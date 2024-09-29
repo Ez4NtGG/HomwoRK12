@@ -19,9 +19,9 @@ Base = declarative_base()
 
 
 class Role(enum.Enum):
-    admin: str = "admin"  # type: ignore
-    moderator: str = "moderator"  # type: ignore
-    user: str = "user"  # type: ignore
+    admin: str = "admin" 
+    moderator: str = "moderator"  
+    user: str = "user" 
 
 
 class User(Base):
@@ -55,4 +55,3 @@ class Contact(Base):
         Integer, ForeignKey("users.id"), nullable=False, default=1
     )
     user = relationship("User", backref="contacts")
-    # , cascade="all, delete-orphan"

@@ -1,13 +1,8 @@
 from sqlalchemy.orm import Session
 
-# from fastapi import Depends
-
 from src.database.models import User
 from src.services.auth.auth import Auth
 from src.repository import users as repository_users
-
-# from src.database.db import get_db
-
 
 auth_service = Auth()
 
@@ -29,8 +24,6 @@ async def signup(body, db: Session):
         if user is not None:
             return None
         body.password = auth_service.get_password_hash(body.password)
-        # if not body.email:
-        #     body.email = body.username
         new_user = await repository_users.create_user(body, db)
     except Exception:
         return None
@@ -43,7 +36,6 @@ async def login(username: str, password: str, db: Session):
         return None
     if not auth_service.verify_password(password, user.password):
         return None
-    # Generate JWT
     access_token, expire_token = await auth_service.create_access_token(data={"sub": user.email})
     token = {"access_token": access_token, "token_type": "bearer", "expire_access_token": expire_token}
     refresh_token, expire_token = await auth_service.create_refresh_token(data={"sub": user.email})
